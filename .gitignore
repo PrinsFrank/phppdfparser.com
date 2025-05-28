@@ -7,3 +7,6 @@ composer.lock
 
 # Cache folder
 /cache
+
+# Env file
+.env

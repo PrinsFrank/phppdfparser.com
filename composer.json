@@ -5,6 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
+            "PHPPDFParser\\": "src/"
         }
     },
     "autoload-dev": {
@@ -12,7 +13,13 @@
         }
     },
     "require": {
-        "php": "~8.3.0 || ~8.4.0"
+        "php": "~8.3.0 || ~8.4.0",
+        "laminas/laminas-diactoros": "^3.6",
+        "laminas/laminas-httphandlerrunner": "^2.12",
+        "league/route": "^6.2",
+        "prinsfrank/container": "^0.3.0",
+        "symfony/dotenv": "^7.2",
+        "twig/twig": "^3.21"
     },
     "require-dev": {
         "composer/composer": "^2.7.7",
