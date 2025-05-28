@@ -1,7 +1,7 @@
 {
-    "name": "",
-    "description": "",
-    "type": "library",
+    "name": "prinsfrank/phppdfparser.com",
+    "description": "Domain to test prinsfrank/pdfparser without having to install it in a project",
+    "type": "project",
     "license": "MIT",
     "autoload": {
         "psr-4": {
