@@ -1,0 +1,9 @@
+# Composer
+/vendor/
+composer.lock
+
+# IDE
+.idea
+
+# Cache folder
+/cache

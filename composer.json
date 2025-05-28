@@ -1,0 +1,36 @@
+{
+    "name": "",
+    "description": "",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+        }
+    },
+    "require": {
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.59.3",
+        "phpunit/phpunit": "^11.2.2",
+        "phpstan/phpstan": "^2.0.0",
+        "composer/composer": "^2.7.7",
+        "phpstan/phpstan-strict-rules": "^1.6"
+    },
+    "scripts": {
+        "cs": "php-cs-fixer fix --allow-risky=yes --dry-run",
+        "cs:fix": "php-cs-fixer fix --allow-risky=yes",
+        "stan": "phpstan analyse -v --memory-limit 4G",
+        "unit": "phpunit --testsuite=Unit",
+        "integration": "phpunit --testsuite=Integration",
+        "test": [
+            "@unit",
+            "@integration",
+            "@cs"
+        ]
+    }
+}
