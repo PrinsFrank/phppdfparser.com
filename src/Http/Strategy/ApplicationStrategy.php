@@ -2,37 +2,50 @@
 
 namespace PHPPDFParser\Http\Strategy;
 
+use Laminas\Diactoros\Exception\InvalidArgumentException;
 use Laminas\Diactoros\Response;
 use League\Route\Http\Exception\MethodNotAllowedException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\Route;
 use League\Route\Strategy\AbstractStrategy;
 use League\Route\Strategy\StrategyInterface;
+use Override;
 use PHPPDFParser\Http\Middleware\ThrowableHandler;
-use Psr\Container\ContainerInterface;
+use PrinsFrank\Container\Container;
+use PrinsFrank\Container\Exception\UnresolvableException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 
 class ApplicationStrategy extends AbstractStrategy implements StrategyInterface {
     public function __construct(
-        readonly private ContainerInterface $container,
+        readonly private Container $container,
     ) {
     }
 
+    #[Override]
     public function getMethodNotAllowedDecorator(MethodNotAllowedException $exception): MiddlewareInterface {
         return $this->throwThrowableMiddleware(404);
     }
 
+    #[Override]
     public function getNotFoundDecorator(NotFoundException $exception): MiddlewareInterface {
         return $this->throwThrowableMiddleware(405);
     }
 
+    /** @throws ContainerExceptionInterface|NotFoundExceptionInterface|RuntimeException */
+    #[Override]
     public function getThrowableHandler(): MiddlewareInterface {
-        return $this->container->get(ThrowableHandler::class);
+        return $this->container->get(ThrowableHandler::class)
+            ?? throw new RuntimeException();
     }
 
+    /** @throws InvalidArgumentException */
+    #[Override]
     public function invokeRouteCallable(Route $route, ServerRequestInterface $request): ResponseInterface {
         $controller = $route->getCallable($this->container);
         try {
@@ -51,6 +64,8 @@ class ApplicationStrategy extends AbstractStrategy implements StrategyInterface 
             ) {
             }
 
+            /** @throws InvalidArgumentException */
+            #[Override]
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $handler

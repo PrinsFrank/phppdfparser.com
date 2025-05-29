@@ -4,6 +4,10 @@ namespace PHPPDFParser\Environment;
 
 readonly class Environment {
     public function get(string $param): ?string {
-        return $_ENV[$param] ?? null;
+        if (is_string($value = $_ENV[$param] ?? null)) {
+            return $value;
+        }
+
+        return null;
     }
 }

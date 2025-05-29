@@ -2,10 +2,14 @@
 
 namespace PHPPDFParser\Http\Response;
 
+use Laminas\Diactoros\Exception\InvalidArgumentException;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\StreamFactory;
 use Psr\Http\Message\ResponseInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 readonly class ResponseFactory {
     public function __construct(
@@ -14,7 +18,11 @@ readonly class ResponseFactory {
     ) {
     }
 
-    public function renderTemplate(string $template, array $context = [], $status = 200): ResponseInterface {
+    /**
+     * @throws SyntaxError|RuntimeError|LoaderError|InvalidArgumentException
+     * @param array<string, mixed> $context
+     */
+    public function renderTemplate(string $template, array $context = [], int $status = 200): ResponseInterface {
         return new Response(
             $this->streamFactory->createStream(
                 $this->twig->render($template, $context)
