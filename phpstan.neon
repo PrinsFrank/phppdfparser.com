@@ -1,4 +1,4 @@
-compoparameters:
+parameters:
     tmpDir: ./cache/.phpstan.result.cache
     level: 9
     paths:
