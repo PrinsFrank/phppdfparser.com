@@ -12,7 +12,6 @@ use League\Route\Strategy\StrategyInterface;
 use Override;
 use PHPPDFParser\Http\Middleware\ThrowableHandler;
 use PrinsFrank\Container\Container;
-use PrinsFrank\Container\Exception\UnresolvableException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;

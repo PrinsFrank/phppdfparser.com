@@ -19,8 +19,8 @@ readonly class ResponseFactory {
     }
 
     /**
-     * @throws SyntaxError|RuntimeError|LoaderError|InvalidArgumentException
      * @param array<string, mixed> $context
+     * @throws SyntaxError|RuntimeError|LoaderError|InvalidArgumentException
      */
     public function renderTemplate(string $template, array $context = [], int $status = 200): ResponseInterface {
         return new Response(
