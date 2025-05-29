@@ -2,7 +2,9 @@
 
 namespace PHPPDFParser;
 
+use PHPPDFParser\Model\PDFParserPackageInfo;
 use PHPPDFParser\Provider\EmitterProvider;
+use PHPPDFParser\Provider\PdfParserPackageVersionProvider;
 use PHPPDFParser\Provider\RouterProvider;
 use PHPPDFParser\Provider\RouteStrategyProvider;
 use PHPPDFParser\Provider\ServerRequestProvider;
@@ -31,6 +33,7 @@ final class Kernel {
     private static function getServiceProviders(): array {
         return [
             EmitterProvider::class,
+            PdfParserPackageVersionProvider::class,
             RouterProvider::class,
             RouteStrategyProvider::class,
             ServerRequestProvider::class,

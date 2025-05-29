@@ -12,6 +12,7 @@ use PrinsFrank\Container\ServiceProvider\ServiceProviderInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
+use PHPPDFParser\Environment\Environment as Env;
 
 readonly class TwigProvider implements ServiceProviderInterface {
     #[Override]
@@ -25,8 +26,9 @@ readonly class TwigProvider implements ServiceProviderInterface {
         $resolvedSet->add(
             new Concrete(
                 Environment::class,
-                function (Router $router) { // @phpstan-ignore argument.type
+                function (Router $router, Env $env) { // @phpstan-ignore argument.type
                     $environment = new Environment(new FilesystemLoader([dirname(__DIR__) . '/Template']));
+                    $environment->addGlobal('basePath', ($env->get('NO_HTTPS') === 'true' ? 'http://' : 'https://') . ($env->get('HOST') ?? ''));
                     $environment->setCache(false);
                     $environment->addFunction(
                         new TwigFunction(

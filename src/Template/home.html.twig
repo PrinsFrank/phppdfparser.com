@@ -1,1 +1,47 @@
-123
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>PHPPDFParser.com</title>
+    <base href="{{ basePath }}"/>
+    <link rel="preload" href="/main.css" as="style"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="PHPPDFParser.com" />
+    <meta name="author" content="Sights of the World" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="description" content="Sights of the World" />
+    <meta property="og:description" content="Sights of the World" />
+    <link rel="canonical" href="https://phppdfparser.com" />
+    <meta property="og:url" content="https://phppdfparser.com" />
+    <meta property="og:site_name" content="PHPPDFParser.com" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta property="twitter:title" content="PHPPDFParser.com" />
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="/main.css"/>
+  </head>
+  <body>
+    <script>/** FOUC FF Fix **/</script>
+    <header>
+      <nav>
+        <a href="/" class="logo">PHPPDFParser.com</a>
+      </nav>
+    </header>
+    <main>
+      <form method="post" enctype="multipart/form-data">
+        <fieldset>
+          <label for="file">PDF</label>
+          <input type="file" name="file" id="file" accept=".pdf,application/pdf" onchange="form.submit();" />
+        </fieldset>
+        <input type="submit" value="Upload" id="form-submit" />
+        <script>document.getElementById('form-submit').style.visibility = 'hidden';</script> <!-- This only works when javascript is enabled, then auto submitting also works -->
+      </form>
+{{ pdfParserPackageInfo.version }}
+{% if document is not null %}
+{{ document.getText()|e('html')|nl2br }}
+{% endif %}
+    </main>
+    <footer>
+    </footer>
+  </body>
+</html>
