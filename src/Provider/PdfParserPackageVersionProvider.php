@@ -6,7 +6,6 @@ use Override;
 use PHPPDFParser\Model\PDFParserPackageInfo;
 use PrinsFrank\Container\Container;
 use PrinsFrank\Container\Definition\DefinitionSet;
-use PrinsFrank\Container\Definition\Item\AbstractConcrete;
 use PrinsFrank\Container\Definition\Item\Concrete;
 use PrinsFrank\Container\Exception\InvalidArgumentException;
 use PrinsFrank\Container\ServiceProvider\ServiceProviderInterface;
@@ -23,12 +22,17 @@ readonly class PdfParserPackageVersionProvider implements ServiceProviderInterfa
         $resolvedSet->add(
             new Concrete(
                 PDFParserPackageInfo::class,
-                static function () { // @phpstan-ignore argument.type
+                static function () {
                     $lockFile = dirname(__DIR__, 2) . '/composer.lock';
-                    $lockData = json_decode(file_get_contents($lockFile), true, JSON_THROW_ON_ERROR);
-                    foreach ($lockData['packages'] as $package) {
-                        if ($package['name'] === 'prinsfrank/pdfparser') {
-                            return new PDFParserPackageInfo($package['version']);
+                    $fileContent = file_get_contents($lockFile);
+                    if ($fileContent === false) {
+                        throw new \RuntimeException('Unable to read ' . $lockFile);
+                    }
+
+                    $lockData = json_decode($fileContent, true, JSON_THROW_ON_ERROR);
+                    foreach (is_array($lockData) && array_key_exists('packages', $lockData) && is_array($lockData['packages']) ? $lockData['packages'] : [] as $package) {
+                        if (is_array($package) && ($package['name'] ?? null) === 'prinsfrank/pdfparser') {
+                            return new PDFParserPackageInfo($package['version'] ?? 'unknown');
                         }
                     }
 

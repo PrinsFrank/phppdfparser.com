@@ -2,37 +2,45 @@
 
 namespace PHPPDFParser\Http\Controller;
 
-use Composer\Composer;
-use Laminas\Diactoros\Exception\InvalidArgumentException;
+use Exception;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\UploadedFile;
 use Override;
 use PHPPDFParser\Http\Response\ResponseFactory;
 use PHPPDFParser\Model\PDFParserPackageInfo;
+use PrinsFrank\PdfParser\Document\Object\Decorator\Page;
 use PrinsFrank\PdfParser\Exception\PdfParserException;
 use PrinsFrank\PdfParser\PdfParser;
 use Psr\Http\Message\ResponseInterface;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 readonly class HomeController implements ControllerInterface {
     public function __construct(
         private ResponseFactory      $responseFactory,
-        private PDFParser            $pdfParser,
+        private PdfParser            $pdfParser,
         private PDFParserPackageInfo $pdfParserPackageInfo,
     ) {
     }
 
-    /** @throws LoaderError|RuntimeError|SyntaxError|InvalidArgumentException */
+    /** @throws Exception */
     #[Override]
     public function __invoke(ServerRequest $request): ResponseInterface {
-        $uploadedFile = $exception = null;
         try {
             $document = ($request->getMethod() === 'POST' && ($uploadedFile = $request->getUploadedFiles()['file'] ?? null) instanceof UploadedFile && $uploadedFile->getError() === UPLOAD_ERR_OK)
                 ? $this->pdfParser->parseString($uploadedFile->getStream()->getContents())
                 : null;
+            $text = array_map(
+                fn (Page $page) => $page->getText(),
+                $document?->getPages() ?? [],
+            );
+            $title = $document?->getInformationDictionary()?->getTitle();
+            $producer = $document?->getInformationDictionary()?->getProducer();
+            $author = $document?->getInformationDictionary()?->getAuthor();
+            $creator = $document?->getInformationDictionary()?->getCreator();
+            $creationDate = $document?->getInformationDictionary()?->getCreationDate();
+            $modificationDate = $document?->getInformationDictionary()?->getModificationDate();
         } catch (PdfParserException $e) {
+            \Sentry\captureException($e);
+
             $exception = $e;
         }
 
@@ -40,9 +48,14 @@ readonly class HomeController implements ControllerInterface {
             'home.html.twig',
             [
                 'pdfParserPackageInfo' => $this->pdfParserPackageInfo,
-                'document' => $document ?? null,
-                'error' => $uploadedFile?->getError() ?? null,
-                'exception' => $exception,
+                'text' => $text ?? null,
+                'title' => $title ?? null,
+                'producer' => $producer ?? null,
+                'author' => $author ?? null,
+                'creator' => $creator ?? null,
+                'creationDate' => $creationDate ?? null,
+                'modificationDate' => $modificationDate ?? null,
+                'exception' => $exception ?? null,
             ],
         );
     }

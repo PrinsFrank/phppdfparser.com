@@ -28,6 +28,9 @@
       </nav>
     </header>
     <main>
+      <p>This page is running version {{ pdfParserPackageInfo.version|e('html') }} of <code>prinsfrank/pdfparser</code></p>
+      <p>To install it in your PHP composer project, simply run <code>composer require prinsfrank/pdfparser</code></p>
+      <p>Select a PDF below to see some of the parsed output!</p>
       <form method="post" enctype="multipart/form-data">
         <fieldset>
           <label for="file">PDF</label>
@@ -36,10 +39,57 @@
         <input type="submit" value="Upload" id="form-submit" />
         <script>document.getElementById('form-submit').style.visibility = 'hidden';</script> <!-- This only works when javascript is enabled, then auto submitting also works -->
       </form>
-{{ pdfParserPackageInfo.version }}
-{% if document is not null %}
-{{ document.getText()|e('html')|nl2br }}
+{% if exception is not null %}
+      <blockquote class="error">{{ exception.message|e('html') }}</blockquote>
 {% endif %}
+      <section>
+        <code>use PrinsFrank\PdfParser\PdfParser;</code><br>
+        <code>$document = (new PdfParser())->parseFile(dirname(__DIR__, 2) . '/path/to/file.pdf');</code><br>
+        <h2>Text</h2>
+        <code>foreach ($document->getPages() as $pageIndex => $page) {</code>
+{% if text is not null %}
+{% for pageText in text %}
+        <h3>Content from page {{ loop.index|e('html') }}</h3>
+        <code>$page->getText();</code> in foreach or <code>$document->getPage({{ loop.index|e('html') }})->getText();</code> on document
+        <blockquote>
+          "{{ pageText|e('html')|replace({"\n": "<br>\n          "})|raw }}"
+        </blockquote>
+{% endfor %}
+{% endif %}
+        <code>}</code>
+      </section>
+      <section>
+        <h2>Title</h2>
+        <code>$title = $document->getInformationDictionary()?->getTitle();</code>
+{% if title is not null %}
+        <blockquote>"{{ title|e('html') }}"</blockquote>
+{% endif %}
+        <h2>Producer</h2>
+        <code>$producer = $document->getInformationDictionary()?->getProducer();</code>
+{% if producer is not null %}
+        <blockquote>"{{ producer|e('html') }}"</blockquote>
+{% endif %}
+        <h2>Author</h2>
+        <code>$author = $document->getInformationDictionary()?->getAuthor();</code>
+{% if author is not null %}
+        <blockquote>"{{ author|e('html') }}"</blockquote>
+{% endif %}
+        <h2>Creator</h2>
+        <code>$creator = $document->getInformationDictionary()?->getCreator();</code>
+{% if creator is not null %}
+        <blockquote>"{{ creator|e('html') }}"</blockquote>
+{% endif %}
+        <h2>Creation date</h2>
+        <code>$creationDate = $document->getInformationDictionary()?->getCreationDate();</code>
+{% if creationDate is not null %}
+        <blockquote>"{{ creationDate.format('Y-m-d H:i:s')|e('html') }}"</blockquote>
+{% endif %}
+        <h2>Modification date</h2>
+        <code>$modificationDate = $document->getInformationDictionary()?->getModificationDate();</code>
+{% if modificationDate is not null %}
+        <blockquote>"{{ modificationDate.format('Y-m-d H:i:s')|e('html') }}"</blockquote>
+{% endif %}
+      </section>
     </main>
     <footer>
     </footer>

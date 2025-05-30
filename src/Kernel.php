@@ -2,7 +2,6 @@
 
 namespace PHPPDFParser;
 
-use PHPPDFParser\Model\PDFParserPackageInfo;
 use PHPPDFParser\Provider\EmitterProvider;
 use PHPPDFParser\Provider\PdfParserPackageVersionProvider;
 use PHPPDFParser\Provider\RouterProvider;

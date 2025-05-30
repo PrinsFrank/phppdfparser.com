@@ -30,6 +30,8 @@ readonly class TwigProvider implements ServiceProviderInterface {
                     $environment = new Environment(new FilesystemLoader([dirname(__DIR__) . '/Template']));
                     $environment->addGlobal('basePath', ($env->get('NO_HTTPS') === 'true' ? 'http://' : 'https://') . ($env->get('HOST') ?? ''));
                     $environment->setCache(false);
+                    $environment->enableStrictVariables();
+                    $environment->disableDebug();
                     $environment->addFunction(
                         new TwigFunction(
                             'route',

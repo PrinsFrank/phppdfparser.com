@@ -19,6 +19,7 @@
         "league/route": "^6.2",
         "prinsfrank/container": "^0.3.0",
         "prinsfrank/pdfparser": "^2.1",
+        "sentry/sentry": "^4.11",
         "symfony/dotenv": "^7.2",
         "twig/twig": "^3.21"
     },
